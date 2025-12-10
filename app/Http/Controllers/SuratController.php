@@ -17,11 +17,34 @@ class SuratController extends Controller
     }
 
     /**
-     * Tampilkan daftar semua surat untuk admin
+     * Tampilkan daftar semua surat untuk admin dengan filter dan pagination
      */
-    public function adminIndex()
+    public function adminIndex(Request $request)
     {
-        $surats = SuratPengajuan::with('user')->latest()->get();
+        $query = SuratPengajuan::with('user')->latest();
+
+        // Filter berdasarkan search (nama atau NIK)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nama_pemohon', 'like', "%{$search}%")
+                  ->orWhere('nik', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan jenis surat
+        if ($request->filled('jenis_surat')) {
+            $query->where('jenis_surat', $request->jenis_surat);
+        }
+
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Pagination 15 data per halaman
+        $surats = $query->paginate(15)->withQueryString();
+
         return view('admin.surats.index', compact('surats'));
     }
 
@@ -57,7 +80,17 @@ class SuratController extends Controller
             "jenis_kelamin" => "required|in:Laki-laki,Perempuan",
             "jenis_surat" => "required|string",
             "keperluan" => "required|string",
-            "file_pendukung" => "required|file|mimes:pdf,jpg,jpeg,png|max:2048" // max 2MB
+            "file_pendukung" => "required|file|mimes:pdf,jpg,jpeg,png|max:2048"
+        ], [
+            'nama_pemohon.required' => 'Nama pemohon wajib diisi.',
+            'nik.required' => 'NIK wajib diisi.',
+            'nik.size' => 'NIK harus 16 digit.',
+            'nomor_telepon.required' => 'Nomor telepon wajib diisi.',
+            'nomor_telepon.min' => 'Nomor telepon minimal 10 digit.',
+            'nomor_telepon.max' => 'Nomor telepon maksimal 13 digit.',
+            'file_pendukung.required' => 'File pendukung wajib diupload.',
+            'file_pendukung.mimes' => 'File harus berformat PDF, JPG, JPEG, atau PNG.',
+            'file_pendukung.max' => 'Ukuran file maksimal 2MB.',
         ]);
 
         // Upload file
@@ -66,11 +99,11 @@ class SuratController extends Controller
         // Simpan ke database
         SuratPengajuan::create([
             "user_id" => auth()->id(),
-            "status" => "pending", // Set default status
+            "status" => "pending",
             ...$validated
         ]);
 
-        return redirect()->route("surats.index")->with("success", "Pengajuan surat berhasil dikirim!");
+        return redirect()->route("dashboard")->with("success", "Pengajuan surat berhasil dikirim!");
     }
 
     /**
@@ -79,6 +112,11 @@ class SuratController extends Controller
     public function approve($id)
     {
         $surat = SuratPengajuan::findOrFail($id);
+        
+        if ($surat->status !== 'pending') {
+            return redirect()->back()->with('error', 'Hanya surat dengan status pending yang dapat disetujui!');
+        }
+
         $surat->update(['status' => 'approved']);
 
         return redirect()->back()->with('success', 'Surat berhasil disetujui!');
@@ -90,8 +128,29 @@ class SuratController extends Controller
     public function reject($id)
     {
         $surat = SuratPengajuan::findOrFail($id);
+        
+        if ($surat->status !== 'pending') {
+            return redirect()->back()->with('error', 'Hanya surat dengan status pending yang dapat ditolak!');
+        }
+
         $surat->update(['status' => 'rejected']);
 
-        return redirect()->back()->with('success', 'Surat berhasil ditolak!');
+        return redirect()->back()->with('error', 'Surat telah ditolak!');
+    }
+
+    /**
+     * Download file pendukung
+     */
+    public function download($id)
+    {
+        $surat = SuratPengajuan::findOrFail($id);
+        
+        $filePath = storage_path('app/public/' . $surat->file_pendukung);
+        
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan!');
+        }
+
+        return response()->download($filePath);
     }
 }

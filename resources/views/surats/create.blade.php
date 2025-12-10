@@ -17,18 +17,54 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(180deg, #e14141 0%, #ff0202 50%, #ff0000 100%);
+            background: linear-gradient(180deg, #b83232 0%, #8b2424 50%, #a52a2a 100%);
             min-height: 100vh;
         }
+
+        /* Top Bar */
+        .top-bar {
+            background: #b83232;
+            color: white;
+            padding: 8px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.813rem;
+        }
+
+
+        .top-bar-left {
+            display: flex;
+            gap: 24px;
+        }
+
+        .top-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-item svg {
+            width: 14px;
+            height: 14px;
+        }
+
 
         /* Navbar */
         .navbar {
             background: white;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 2px solid #e5e7eb;
             padding: 16px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
         }
 
         .logo-section {
@@ -38,15 +74,41 @@
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             object-fit: contain;
         }
 
         .logo-text {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1f2937;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #b83232;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #b83232;
+            background: #fef2f2;
+        }
+
+        .nav-link.active {
+            color: white;
+            background: #b83232;
         }
 
         .profile-section {
@@ -60,13 +122,27 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 4px 8px;
+            padding: 8px 12px;
             border-radius: 6px;
             transition: background 0.2s;
+            border: 1px solid #e5e7eb;
         }
 
         .profile-btn:hover {
-            background: #f3f4f6;
+            background: #f9fafb;
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #b83232;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
         }
 
         .profile-name {
@@ -76,8 +152,8 @@
         }
 
         .dropdown-icon {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             transition: transform 0.2s;
         }
 
@@ -90,13 +166,40 @@
             right: 0;
             top: 100%;
             margin-top: 8px;
-            width: 160px;
+            width: 180px;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             overflow: hidden;
             z-index: 1000;
+        }
+
+        .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 0.875rem;
+            color: #374151;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f9fafb;
+        }
+
+        .dropdown-item.logout {
+            color: #dc2626;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .dropdown-item.logout:hover {
+            background: #fef2f2;
         }
 
         /* Container */
@@ -154,7 +257,7 @@
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: #b83232;
         }
 
         textarea {
@@ -228,7 +331,7 @@
         }
 
         .btn-submit {
-            background: #3b82f6;
+            background: #b83232;
             color: white;
             padding: 10px 24px;
             border: none;
@@ -240,7 +343,7 @@
         }
 
         .btn-submit:hover {
-            background: #2563eb;
+            background: #8b2424;
         }
 
         .btn-back {
@@ -325,15 +428,50 @@
 
 <body>
 
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-bar-left">
+        <div class="top-bar-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+            <span>(024) 6710024</span>
+        </div>
+        <div class="top-bar-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>pedurungan@semarangkota.go.id</span>
+        </div>
+    </div>
+</div>
+
 <!-- NAVBAR -->
-<nav class="navbar">
-    <div class="logo-section">
-        <img src="{{ asset('build/images/logosemkot.png') }}" alt="Logo Kota Semarang" class="logo-icon">
-        <span class="logo-text">Pedupa</span>
+<nav class="navbar" x-data="{ mobileMenuOpen: false }">
+    <div class="navbar-left">
+        <div class="logo-section">
+            <img src="{{ asset('build/images/logosemkot.png') }}" alt="Logo Kota Semarang" class="logo-icon">
+            <span class="logo-text">PEDUPA</span>
+        </div>
+
+        <button class="mobile-menu-btn" @click="mobileMenuOpen = !mobileMenuOpen" type="button">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+
+        <div class="nav-menu" :class="{ 'show': mobileMenuOpen }">
+            <a href="{{ route('dashboard') }}" class="nav-link">Beranda</a>
+            <a href="{{ route('surats.index') }}" class="nav-link active">Surat Online</a>
+            <a href="{{ route('pengaduans.index') }}" class="nav-link">Pengaduan</a>
+        </div>
     </div>
 
     <div class="profile-section" x-data="{ open: false }">
         <button class="profile-btn" :class="{ 'active': open }" @click="open = !open" type="button">
+            <div class="profile-avatar">
+                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+            </div>
             <span class="profile-name">{{ auth()->user()->name }}</span>
             <svg class="dropdown-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
@@ -341,10 +479,20 @@
         </button>
 
         <div class="dropdown-menu" x-show="open" @click.outside="open = false" x-transition>
-            <a href="{{ route('profile.edit') }}" class="dropdown-item">Profil</a>
+            <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                <svg style="width: 16px; height: 16px; display: inline; margin-right: 8px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Profil Saya
+            </a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="dropdown-item logout">Log Out</button>
+                <button type="submit" class="dropdown-item logout">
+                    <svg style="width: 16px; height: 16px; display: inline; margin-right: 8px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    Keluar
+                </button>
             </form>
         </div>
     </div>

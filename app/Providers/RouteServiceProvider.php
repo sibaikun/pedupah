@@ -12,8 +12,12 @@ class RouteServiceProvider extends ServiceProvider
 {
     /**
      * The path to your application's "home" route.
+     *
+     * Typically, users are redirected here after authentication.
+     *
+     * @var string
      */
-    public const HOME = '/dashboard';
+    public const HOME = '/redirect-login'; // UBAH INI!
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -25,12 +29,9 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            // Cek jika file api.php ada, baru load
-            if (file_exists(base_path('routes/api.php'))) {
-                Route::middleware('api')
-                    ->prefix('api')
-                    ->group(base_path('routes/api.php'));
-            }
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));

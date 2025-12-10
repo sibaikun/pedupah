@@ -16,17 +16,17 @@ use App\Http\Controllers\PengaduanController;
 | Jadi set di sana ke route('redirect.login')
 */
 Route::get('/redirect-login', function () {
-
     $user = Auth::user();
 
     if (!$user) {
         return redirect()->route('login');
     }
 
-    return $user->its_admin == 1
-        ? redirect()->route('admin.dashboard')
-        : redirect()->route('dashboard');
-
+    if ($user->its_admin == 1) {
+        return redirect()->route('admin.dashboard');
+    }
+    
+    return redirect()->route('dashboard');
 })->middleware(['auth'])->name('redirect.login');
 
 

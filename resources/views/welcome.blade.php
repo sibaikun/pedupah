@@ -21,6 +21,34 @@
             min-height: 100vh;
         }
 
+                /* Top Bar */
+        .top-bar {
+            background: #b83232;
+            color: white;
+            padding: 8px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.813rem;
+        }
+
+
+        .top-bar-left {
+            display: flex;
+            gap: 24px;
+        }
+
+        .top-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-bar-item svg {
+            width: 14px;
+            height: 14px;
+        }
+
         /* Navbar */
         .navbar {
             background: white;
@@ -495,10 +523,28 @@
 
 <body>
 
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="top-bar-left">
+        <div class="top-bar-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+            </svg>
+            <span>(024) 6710024</span>
+        </div>
+        <div class="top-bar-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>pedurungan@semarangkota.go.id</span>
+        </div>
+    </div>
+</div>
+
 <!-- NAVBAR -->
 <nav class="navbar">
     <div class="logo-section">
-        <img src="https://id.wikipedia.org/wiki/Kota_Semarang#/media/Berkas:Seal_of_the_City_of_Semarang.svg" alt="Logo Kota Semarang" class="logo-icon">
+        <img src="{{ asset('build/images/logosemkot.png') }}" alt="Logo Kota Semarang" class="logo-icon">
         <span class="logo-text">PEDUPA</span>
     </div>
 
