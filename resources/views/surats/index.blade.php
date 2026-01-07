@@ -499,7 +499,7 @@
 <nav class="navbar" x-data="{ mobileMenuOpen: false }">
     <div class="navbar-left">
         <div class="logo-section">
-            <img src="{{ asset('build/images/logosemkot.png') }}" alt="Logo Kota Semarang" class="logo-icon">
+            <img src="{{ asset('build/images/logoicon.png') }}" alt="Logo Kota Semarang" class="logo-icon">
             <span class="logo-text">PEDUPA</span>
         </div>
 
@@ -512,7 +512,7 @@
         <div class="nav-menu" :class="{ 'show': mobileMenuOpen }">
             <a href="{{ route('dashboard') }}" class="nav-link">Beranda</a>
             <a href="{{ route('surats.index') }}" class="nav-link active">Surat Online</a>
-            <a href="{{ route('pengaduans.index') }}" class="nav-link">Pengaduan</a>
+            <a href="{{ route('pengaduans.index') }}" class="nav-link">Aduan</a>
         </div>
     </div>
 

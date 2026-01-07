@@ -544,7 +544,7 @@
 <!-- NAVBAR -->
 <nav class="navbar">
     <div class="logo-section">
-        <img src="{{ asset('build/images/logosemkot.png') }}" alt="Logo Kota Semarang" class="logo-icon">
+        <img src="{{ asset('build/images/logoicon.png') }}" alt="Logo Kota Semarang" class="logo-icon">
         <span class="logo-text">PEDUPA</span>
     </div>
 

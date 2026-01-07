@@ -153,4 +153,28 @@ class SuratController extends Controller
 
         return response()->download($filePath);
     }
+
+    /**
+     * Hapus pengajuan surat (untuk user)
+     */
+    public function destroy($id)
+    {
+        $surat = SuratPengajuan::where('id', $id)
+                            ->where('user_id', auth()->id())
+                            ->firstOrFail();
+        
+        // Hanya bisa hapus jika status pending atau rejected
+        if ($surat->status !== 'pending' && $surat->status !== 'rejected') {
+            return redirect()->back()->with('error', 'Hanya pengajuan dengan status pending atau ditolak yang dapat dihapus!');
+        }
+        
+        // Hapus file jika ada
+        if ($surat->file_pendukung && \Storage::disk('public')->exists($surat->file_pendukung)) {
+            \Storage::disk('public')->delete($surat->file_pendukung);
+        }
+        
+        $surat->delete();
+        
+        return redirect()->route('surats.index')->with('success', 'Pengajuan surat berhasil dihapus!');
+    }
 }

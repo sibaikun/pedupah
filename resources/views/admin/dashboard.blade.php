@@ -399,7 +399,7 @@
 <nav class="navbar" x-data="{ mobileMenuOpen: false }">
     <div class="navbar-left">
         <div class="logo-section">
-            <img src="{{ asset('build/images/logosemkot.png') }}" alt="Logo Kota Semarang" class="logo-icon">
+            <img src="{{ asset('build/images/logoicon.png') }}" alt="Logo Kota Semarang" class="logo-icon">
             <span class="logo-text">
                 PEDUPA
                 <span class="admin-badge">ADMIN</span>
@@ -412,11 +412,12 @@
             </svg>
         </button>
 
-        <div class="nav-menu" :class="{ 'show': mobileMenuOpen }">
+<div class="nav-menu" :class="{ 'show': mobileMenuOpen }">
             <a href="{{ route('admin.dashboard') }}" class="nav-link active">Dashboard</a>
             <a href="{{ route('admin.surats.index') }}" class="nav-link">Surat Online</a>
+            <a href="{{ route('admin.surat-masuk.index') }}" class="nav-link">Surat Masuk</a>
+            <a href="{{ route('admin.surat-keluar.index') }}" class="nav-link">Surat Keluar</a>
             <a href="{{ route('admin.pengaduans.index') }}" class="nav-link">Pengaduan</a>
-            <a href="#" class="nav-link">Manajemen User</a>
         </div>
     </div>
 

@@ -6,6 +6,9 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuratController;
 use App\Http\Controllers\PengaduanController;
+use App\Http\Controllers\SuratOfflineController;
+use App\Http\Controllers\Admin\SuratMasukController;
+use App\Http\Controllers\Admin\SuratKeluarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,7 +95,7 @@ Route::middleware(['auth', 'verified', 'isAdmin'])
         // Dashboard Admin
         Route::view('/dashboard', 'admin.dashboard')->name('dashboard');
 
-        // Surat Admin
+        // Surat Online Admin
         Route::prefix('surats')->name('surats.')->group(function () {
             Route::get('/', [SuratController::class, 'adminIndex'])->name('index');
             Route::get('/{id}', [SuratController::class, 'show'])->name('show');
@@ -100,7 +103,54 @@ Route::middleware(['auth', 'verified', 'isAdmin'])
             Route::patch('/{id}/reject', [SuratController::class, 'reject'])->name('reject');
         });
 
-        // Pengaduan Admin (opsional - untuk mengelola pengaduan)
+        // ===================================================================
+        // SURAT MASUK - Menggunakan Controller Terpisah
+        // ===================================================================
+        Route::prefix('surat-masuk')->name('surat-masuk.')->group(function () {
+            Route::get('/', [SuratMasukController::class, 'index'])->name('index');
+            Route::post('/', [SuratMasukController::class, 'store'])->name('store');
+            Route::get('/{id}', [SuratMasukController::class, 'show'])->name('show');
+            Route::delete('/{id}', [SuratMasukController::class, 'destroy'])->name('destroy');
+        });
+
+        // ===================================================================
+        // SURAT KELUAR - Menggunakan Controller Terpisah
+        // ===================================================================
+        Route::prefix('surat-keluar')->name('surat-keluar.')->group(function () {
+            Route::get('/', [SuratKeluarController::class, 'index'])->name('index');
+            Route::post('/', [SuratKeluarController::class, 'store'])->name('store');
+            Route::get('/{id}', [SuratKeluarController::class, 'show'])->name('show');
+            Route::get('/{id}/print', [SuratKeluarController::class, 'print'])->name('print');
+            Route::delete('/{id}', [SuratKeluarController::class, 'destroy'])->name('destroy');
+        });
+
+        // ===================================================================
+        // SURAT OFFLINE (OPTIONAL - Jika masih mau pakai yang lama)
+        // ===================================================================
+        // Jika Anda ingin tetap mempertahankan route suratoffline yang lama,
+        // bisa dibiarkan di bawah ini. Atau bisa dihapus jika sudah tidak dipakai.
+        Route::prefix('suratoffline')->name('suratoffline.')->group(function () {
+            // Halaman Index (List Surat Masuk & Keluar)
+            Route::get('/', [SuratOfflineController::class, 'index'])->name('index');
+            
+            // Surat Masuk Routes (OLD)
+            Route::get('/masuk/create', [SuratOfflineController::class, 'createMasuk'])->name('masuk.create');
+            Route::post('/masuk', [SuratOfflineController::class, 'storeMasuk'])->name('masuk.store');
+            Route::get('/masuk/{id}', [SuratOfflineController::class, 'showMasuk'])->name('masuk.show');
+            Route::get('/masuk/{id}/edit', [SuratOfflineController::class, 'editMasuk'])->name('masuk.edit');
+            Route::put('/masuk/{id}', [SuratOfflineController::class, 'updateMasuk'])->name('masuk.update');
+            Route::delete('/masuk/{id}', [SuratOfflineController::class, 'destroyMasuk'])->name('masuk.destroy');
+            
+            // Surat Keluar Routes (OLD)
+            Route::get('/keluar/create', [SuratOfflineController::class, 'createKeluar'])->name('keluar.create');
+            Route::post('/keluar', [SuratOfflineController::class, 'storeKeluar'])->name('keluar.store');
+            Route::get('/keluar/{id}', [SuratOfflineController::class, 'showKeluar'])->name('keluar.show');
+            Route::get('/keluar/{id}/edit', [SuratOfflineController::class, 'editKeluar'])->name('keluar.edit');
+            Route::put('/keluar/{id}', [SuratOfflineController::class, 'updateKeluar'])->name('keluar.update');
+            Route::delete('/keluar/{id}', [SuratOfflineController::class, 'destroyKeluar'])->name('keluar.destroy');
+        });
+
+        // Pengaduan Admin
         Route::prefix('pengaduans')->name('pengaduans.')->group(function () {
             Route::get('/', [PengaduanController::class, 'adminIndex'])->name('index');
             Route::get('/{id}', [PengaduanController::class, 'adminShow'])->name('show');
