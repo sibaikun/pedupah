@@ -24,22 +24,26 @@ class SuratKeluar extends Model
     ];
 
     protected $casts = [
-        'tanggal_kirim' => 'date'
+        'tanggal_kirim' => 'date',
     ];
 
-    // Status options
-    const STATUS_DRAFT = 'draft';
-    const STATUS_SENT = 'sent';
-    const STATUS_DELIVERED = 'delivered';
+    public function getStatusBadgeAttribute()
+    {
+        $badges = [
+            'draft' => 'badge-warning',
+            'sent' => 'badge-primary',
+            'delivered' => 'badge-success'
+        ];
+        return $badges[$this->status] ?? 'badge-secondary';
+    }
 
     public function getStatusTextAttribute()
     {
-        $statuses = [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_SENT => 'Terkirim',
-            self::STATUS_DELIVERED => 'Diterima'
+        $texts = [
+            'draft' => 'Draft',
+            'sent' => 'Terkirim',
+            'delivered' => 'Diterima'
         ];
-
-        return $statuses[$this->status] ?? $this->status;
+        return $texts[$this->status] ?? $this->status;
     }
 }

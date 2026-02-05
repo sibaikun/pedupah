@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Pedupa - Surat Masuk</title>
+    <title>Pedupa - Detail Surat Masuk</title>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
@@ -159,6 +159,11 @@
         .dropdown-icon {
             width: 14px;
             height: 14px;
+            transition: transform 0.2s;
+        }
+
+        .profile-btn.active .dropdown-icon {
+            transform: rotate(180deg);
         }
 
         .dropdown-menu {
@@ -198,6 +203,10 @@
             border-top: 1px solid #f3f4f6;
         }
 
+        .dropdown-item.logout:hover {
+            background: #fef2f2;
+        }
+
         .hero-section {
             background: linear-gradient(135deg, #b83232 0%, #8b2424 100%);
             color: white;
@@ -217,7 +226,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1000px;
             margin: -20px auto 40px;
             padding: 0 24px;
             position: relative;
@@ -229,6 +238,7 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             overflow: hidden;
+            margin-bottom: 24px;
         }
 
         .card-header {
@@ -243,6 +253,20 @@
             font-size: 1.25rem;
             font-weight: 600;
             color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title svg {
+            width: 24px;
+            height: 24px;
+            color: #10b981;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
         }
 
         .btn {
@@ -277,15 +301,6 @@
             background: #059669;
         }
 
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
         .btn-warning {
             background: #f59e0b;
             color: white;
@@ -295,95 +310,71 @@
             background: #d97706;
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.813rem;
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
         }
 
         .card-body {
             padding: 24px;
         }
 
-        .search-filter {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
         }
 
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 16px 10px 40px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            color: #9ca3af;
-        }
-
-        .filter-select {
-            padding: 10px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            background: white;
-            cursor: pointer;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
+        .detail-item {
+            padding: 16px;
             background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
         }
 
-        th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 0.813rem;
+        .detail-label {
+            font-size: 0.75rem;
             font-weight: 600;
             color: #6b7280;
             text-transform: uppercase;
-            border-bottom: 2px solid #e5e7eb;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
-        td {
-            padding: 16px;
-            font-size: 0.875rem;
-            color: #374151;
-            border-bottom: 1px solid #f3f4f6;
+        .detail-value {
+            font-size: 1rem;
+            color: #1f2937;
+            font-weight: 500;
         }
 
-        tbody tr:hover {
-            background: #f9fafb;
+        .detail-value.empty {
+            color: #9ca3af;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .detail-item.perihal {
+            border-left-color: #3b82f6;
+        }
+
+        .detail-item.catatan {
+            border-left-color: #f59e0b;
         }
 
         .badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 6px 14px;
             border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 500;
+            font-size: 0.813rem;
+            font-weight: 600;
         }
 
         .badge-success {
@@ -401,51 +392,124 @@
             color: #1e40af;
         }
 
-        .action-buttons {
+        .file-section {
+            margin-top: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-radius: 8px;
+            border: 2px dashed #fca5a5;
+        }
+
+        .file-header {
             display: flex;
-            gap: 8px;
-        }
-
-        .alert {
-            padding: 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 8px;
-            padding: 20px 24px;
-            border-top: 1px solid #e5e7eb;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .pagination a, .pagination span {
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
+        .file-header svg {
+            width: 28px;
+            height: 28px;
+            color: #dc2626;
+        }
+
+        .file-header h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #991b1b;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
             background: white;
             border-radius: 6px;
-            font-size: 0.875rem;
-            text-decoration: none;
-            color: #374151;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .pagination a:hover {
-            background: #f9fafb;
-            border-color: #b83232;
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .pagination .active {
-            background: #b83232;
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            background: #dc2626;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            border-color: #b83232;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .file-meta h4 {
+            font-size: 0.938rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .file-meta p {
+            font-size: 0.813rem;
+            color: #6b7280;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .timestamp-section {
+            margin-top: 24px;
+            padding: 16px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-around;
+            border: 1px solid #bfdbfe;
+        }
+
+        .timestamp-item {
+            text-align: center;
+        }
+
+        .timestamp-label {
+            font-size: 0.75rem;
+            color: #1e40af;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .timestamp-value {
+            font-size: 0.875rem;
+            color: #1e3a8a;
+            font-weight: 500;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 24px 0;
+        }
+
+        .no-file-message {
+            text-align: center;
+            padding: 32px;
+            color: #6b7280;
+        }
+
+        .no-file-message svg {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            opacity: 0.5;
         }
 
         /* Mobile Menu Toggle */
@@ -511,16 +575,43 @@
                 gap: 12px;
             }
 
-            .search-filter {
-                flex-direction: column;
+            .container {
+                padding: 0 16px;
             }
 
-            .search-box {
-                min-width: 100%;
+            .card-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
             }
 
             .action-buttons {
+                width: 100%;
                 flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .file-info {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .file-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .timestamp-section {
+                flex-direction: column;
+                gap: 12px;
             }
         }
     </style>
@@ -548,7 +639,7 @@
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        <span>{{ now()->format('l, d F Y') }}</span>
+        <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
     </div>
 </div>
 
@@ -610,8 +701,8 @@
 <!-- HERO SECTION -->
 <section class="hero-section">
     <div class="hero-content">
-        <h1>Surat Masuk</h1>
-        <p>Kelola dan monitoring surat masuk dari instansi lain</p>
+        <h1>Detail Surat Masuk</h1>
+        <p>Informasi lengkap surat masuk dari instansi lain</p>
     </div>
 </section>
 
@@ -619,110 +710,128 @@
 <div class="container">
     <div class="content-card">
         <div class="card-header">
-            <h2 class="card-title">Daftar Surat Masuk</h2>
-            <a href="{{ route('admin.surat-masuk.create') }}" class="btn btn-primary">
-                <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            <h2 class="card-title">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                Tambah Surat Masuk
-            </a>
+                Detail Surat Masuk
+            </h2>
+            <div class="action-buttons">
+                <a href="{{ route('admin.surat-masuk.print', $suratMasuk->id) }}" target="_blank" class="btn btn-success">
+                    <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                    </svg>
+                    Cetak Surat
+                </a>
+                <a href="{{ route('admin.surat-masuk.edit', $suratMasuk->id) }}" class="btn btn-warning">
+                    <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Edit
+                </a>
+                <a href="{{ route('admin.surat-masuk.index') }}" class="btn btn-secondary">
+                    <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Kembali
+                </a>
+            </div>
         </div>
 
         <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
-
-            <!-- Search & Filter -->
-            <form method="GET" action="{{ route('admin.surat-masuk.index') }}">
-                <div class="search-filter">
-                    <div class="search-box">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input type="text" name="search" placeholder="Cari nomor surat, pengirim, atau perihal..." value="{{ request('search') }}">
-                    </div>
-                    <select name="status" class="filter-select" onchange="this.form.submit()">
-                        <option value="">Semua Status</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Belum Diproses</option>
-                        <option value="processed" {{ request('status') == 'processed' ? 'selected' : '' }}>Sudah Diproses</option>
-                        <option value="archived" {{ request('status') == 'archived' ? 'selected' : '' }}>Diarsipkan</option>
-                    </select>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Nomor Surat</div>
+                    <div class="detail-value">{{ $suratMasuk->nomor_surat }}</div>
                 </div>
-            </form>
 
-            <!-- Table -->
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nomor Surat</th>
-                            <th>Tanggal Terima</th>
-                            <th>Pengirim</th>
-                            <th>Perihal</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($suratMasuk as $index => $surat)
-                        <tr>
-                            <td>{{ $suratMasuk->firstItem() + $index }}</td>
-                            <td>{{ $surat->nomor_surat }}</td>
-                            <td>{{ $surat->tanggal_terima->format('d/m/Y') }}</td>
-                            <td>{{ $surat->pengirim }}</td>
-                            <td>{{ Str::limit($surat->perihal, 50) }}</td>
-                            <td>
-                                <span class="badge {{ $surat->status_badge }}">
-                                    {{ $surat->status_text }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{{ route('admin.surat-masuk.show', $surat->id) }}" class="btn btn-sm btn-success">
-                                        <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
-                                        Detail
-                                    </a>
-                                    <a href="{{ route('admin.surat-masuk.edit', $surat->id) }}" class="btn btn-sm btn-warning">
-                                        <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                        </svg>
-                                        Edit
-                                    </a>
-                                    <form method="POST" action="{{ route('admin.surat-masuk.destroy', $surat->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" style="text-align: center; padding: 40px;">
-                                Tidak ada data surat masuk.
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                <div class="detail-item">
+                    <div class="detail-label">Tanggal Terima</div>
+                    <div class="detail-value">{{ $suratMasuk->tanggal_terima->format('d F Y') }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Pengirim</div>
+                    <div class="detail-value">{{ $suratMasuk->pengirim }}</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        <span class="badge {{ $suratMasuk->status_badge }}">
+                            {{ $suratMasuk->status_text }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="detail-item perihal full-width">
+                    <div class="detail-label">Perihal</div>
+                    <div class="detail-value">{{ $suratMasuk->perihal }}</div>
+                </div>
+
+                <div class="detail-item catatan full-width">
+                    <div class="detail-label">Catatan</div>
+                    <div class="detail-value {{ $suratMasuk->catatan ? '' : 'empty' }}">
+                        {{ $suratMasuk->catatan ?? 'Tidak ada catatan tambahan' }}
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-            {{ $suratMasuk->links() }}
+            <!-- File Section -->
+            <div class="file-section">
+                <div class="file-header">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <h3>File Lampiran Surat</h3>
+                </div>
+
+                @if($suratMasuk->file_path)
+                    <div class="file-info">
+                        <div class="file-details">
+                            <div class="file-icon">PDF</div>
+                            <div class="file-meta">
+                                <h4>{{ basename($suratMasuk->file_path) }}</h4>
+                                <p>Dokumen PDF - Surat Masuk</p>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <a href="{{ asset('storage/' . $suratMasuk->file_path) }}" target="_blank" class="btn btn-success">
+                                <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                Lihat File
+                            </a>
+                            <a href="{{ asset('storage/' . $suratMasuk->file_path) }}" download class="btn btn-primary">
+                                <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Download
+                            </a>
+                        </div>
+                    </div>
+                @else
+                    <div class="no-file-message">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <p>Tidak ada file lampiran untuk surat ini</p>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Timestamp Section -->
+            <div class="timestamp-section">
+                <div class="timestamp-item">
+                    <div class="timestamp-label">Dibuat Pada</div>
+                    <div class="timestamp-value">{{ $suratMasuk->created_at->format('d F Y, H:i') }} WIB</div>
+                </div>
+                <div class="timestamp-item">
+                    <div class="timestamp-label">Terakhir Diubah</div>
+                    <div class="timestamp-value">{{ $suratMasuk->updated_at->format('d F Y, H:i') }} WIB</div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

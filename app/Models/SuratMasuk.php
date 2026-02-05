@@ -22,22 +22,26 @@ class SuratMasuk extends Model
     ];
 
     protected $casts = [
-        'tanggal_terima' => 'date'
+        'tanggal_terima' => 'date',
     ];
 
-    // Status options
-    const STATUS_PENDING = 'pending';
-    const STATUS_PROCESSED = 'processed';
-    const STATUS_ARCHIVED = 'archived';
+    public function getStatusBadgeAttribute()
+    {
+        $badges = [
+            'pending' => 'badge-warning',
+            'processed' => 'badge-success',
+            'archived' => 'badge-info'
+        ];
+        return $badges[$this->status] ?? 'badge-secondary';
+    }
 
     public function getStatusTextAttribute()
     {
-        $statuses = [
-            self::STATUS_PENDING => 'Belum Diproses',
-            self::STATUS_PROCESSED => 'Sudah Diproses',
-            self::STATUS_ARCHIVED => 'Diarsipkan'
+        $texts = [
+            'pending' => 'Belum Diproses',
+            'processed' => 'Sudah Diproses',
+            'archived' => 'Diarsipkan'
         ];
-
-        return $statuses[$this->status] ?? $this->status;
+        return $texts[$this->status] ?? $this->status;
     }
 }

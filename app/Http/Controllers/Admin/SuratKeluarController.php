@@ -6,18 +6,51 @@ use App\Http\Controllers\Controller;
 use App\Models\SuratKeluar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SuratKeluarController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
-        $suratKeluar = SuratKeluar::orderBy('tanggal_kirim', 'desc')->get();
+        $query = SuratKeluar::query();
+
+        // Search functionality
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nomor_surat', 'like', "%{$search}%")
+                  ->orWhere('tujuan', 'like', "%{$search}%")
+                  ->orWhere('perihal', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $suratKeluar = $query->orderBy('created_at', 'desc')->paginate(10);
+
         return view('admin.surat-keluar.index', compact('suratKeluar'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('admin.surat-keluar.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nomor_surat' => 'required|string|max:255',
             'tanggal_kirim' => 'required|date',
             'tujuan' => 'required|string|max:255',
@@ -26,46 +59,87 @@ class SuratKeluarController extends Controller
             'isi_surat' => 'required|string',
             'status' => 'required|in:draft,sent,delivered',
             'penandatangan' => 'nullable|string|max:255',
-            'tembusan' => 'nullable|string',
-            'file_lampiran' => 'nullable|file|mimes:pdf|max:5120'
+            'file' => 'nullable|file|mimes:pdf|max:2048'
         ]);
 
-        $data = $request->only([
-            'nomor_surat', 'tanggal_kirim', 'tujuan', 'alamat_tujuan',
-            'perihal', 'isi_surat', 'status', 'penandatangan', 'tembusan'
-        ]);
-
-        // Upload file jika ada
-        if ($request->hasFile('file_lampiran')) {
-            $file = $request->file('file_lampiran');
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('surat-keluar', $filename, 'public');
-            $data['file_path'] = $path;
+            $validated['file_path'] = $path;
         }
 
-        SuratKeluar::create($data);
+        SuratKeluar::create($validated);
 
         return redirect()->route('admin.surat-keluar.index')
-            ->with('success', 'Surat keluar berhasil dibuat!');
+            ->with('success', 'Surat keluar berhasil ditambahkan!');
     }
 
-    public function show($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
         $surat = SuratKeluar::findOrFail($id);
-        return response()->json($surat);
+        return view('admin.surat-keluar.show', compact('surat'));
     }
 
-    public function print($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
         $surat = SuratKeluar::findOrFail($id);
-        return view('admin.surat-keluar.print', compact('surat'));
+        return view('admin.surat-keluar.edit', compact('surat'));
     }
 
-    public function destroy($id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
         $surat = SuratKeluar::findOrFail($id);
-        
-        // Hapus file jika ada
+
+        $validated = $request->validate([
+            'nomor_surat' => 'required|string|max:255',
+            'tanggal_kirim' => 'required|date',
+            'tujuan' => 'required|string|max:255',
+            'alamat_tujuan' => 'required|string',
+            'perihal' => 'required|string|max:255',
+            'isi_surat' => 'required|string',
+            'status' => 'required|in:draft,sent,delivered',
+            'penandatangan' => 'nullable|string|max:255',
+            'file' => 'nullable|file|mimes:pdf|max:2048'
+        ]);
+
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            // Delete old file if exists
+            if ($surat->file_path && Storage::disk('public')->exists($surat->file_path)) {
+                Storage::disk('public')->delete($surat->file_path);
+            }
+
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('surat-keluar', $filename, 'public');
+            $validated['file_path'] = $path;
+        }
+
+        $surat->update($validated);
+
+        return redirect()->route('admin.surat-keluar.index')
+            ->with('success', 'Surat keluar berhasil diperbarui!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $surat = SuratKeluar::findOrFail($id);
+
+        // Delete file if exists
         if ($surat->file_path && Storage::disk('public')->exists($surat->file_path)) {
             Storage::disk('public')->delete($surat->file_path);
         }
@@ -74,5 +148,31 @@ class SuratKeluarController extends Controller
 
         return redirect()->route('admin.surat-keluar.index')
             ->with('success', 'Surat keluar berhasil dihapus!');
+    }
+
+    /**
+     * Print the surat to PDF.
+     */
+    public function print(string $id)
+    {
+        try {
+            $surat = SuratKeluar::findOrFail($id);
+            
+            // Load view with data
+            $pdf = Pdf::loadView('admin.surat-keluar.print', compact('surat'));
+            
+            // Set paper size and orientation
+            $pdf->setPaper('A4', 'portrait');
+            
+            // Generate filename yang aman (tanpa karakter spesial)
+            $filename = 'surat-keluar-' . str_replace(['/', '\\', ' '], '-', $surat->nomor_surat) . '.pdf';
+            
+            // Download PDF
+            return $pdf->download($filename);
+            
+        } catch (\Exception $e) {
+            return redirect()->route('admin.surat-keluar.index')
+                ->with('error', 'Gagal mencetak PDF: ' . $e->getMessage());
+        }
     }
 }

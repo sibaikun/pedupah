@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Pedupa - Surat Masuk</title>
+    <title>Pedupa - Tambah Surat Masuk</title>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
@@ -159,6 +159,11 @@
         .dropdown-icon {
             width: 14px;
             height: 14px;
+            transition: transform 0.2s;
+        }
+
+        .profile-btn.active .dropdown-icon {
+            transform: rotate(180deg);
         }
 
         .dropdown-menu {
@@ -198,6 +203,10 @@
             border-top: 1px solid #f3f4f6;
         }
 
+        .dropdown-item.logout:hover {
+            background: #fef2f2;
+        }
+
         .hero-section {
             background: linear-gradient(135deg, #b83232 0%, #8b2424 100%);
             color: white;
@@ -217,7 +226,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 800px;
             margin: -20px auto 40px;
             padding: 0 24px;
             position: relative;
@@ -234,15 +243,69 @@
         .card-header {
             padding: 20px 24px;
             border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .card-title {
             font-size: 1.25rem;
             font-weight: 600;
             color: #1f2937;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-label .required {
+            color: #dc2626;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #b83232;
+            box-shadow: 0 0 0 3px rgba(184, 50, 50, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-help {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .invalid-feedback {
+            display: block;
+            font-size: 0.813rem;
+            color: #dc2626;
+            margin-top: 4px;
+        }
+
+        .is-invalid {
+            border-color: #dc2626;
         }
 
         .btn {
@@ -268,184 +331,21 @@
             background: #9b2828;
         }
 
-        .btn-success {
-            background: #10b981;
+        .btn-secondary {
+            background: #6b7280;
             color: white;
         }
 
-        .btn-success:hover {
-            background: #059669;
+        .btn-secondary:hover {
+            background: #4b5563;
         }
 
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        .btn-warning {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #d97706;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.813rem;
-        }
-
-        .card-body {
-            padding: 24px;
-        }
-
-        .search-filter {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 10px 16px 10px 40px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            color: #9ca3af;
-        }
-
-        .filter-select {
-            padding: 10px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            background: white;
-            cursor: pointer;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #f9fafb;
-        }
-
-        th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 0.813rem;
-            font-weight: 600;
-            color: #6b7280;
-            text-transform: uppercase;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        td {
-            padding: 16px;
-            font-size: 0.875rem;
-            color: #374151;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .badge-success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .alert {
-            padding: 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            padding: 20px 24px;
+        .card-footer {
+            padding: 16px 24px;
             border-top: 1px solid #e5e7eb;
-        }
-
-        .pagination a, .pagination span {
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            background: white;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            text-decoration: none;
-            color: #374151;
-        }
-
-        .pagination a:hover {
-            background: #f9fafb;
-            border-color: #b83232;
-        }
-
-        .pagination .active {
-            background: #b83232;
-            color: white;
-            border-color: #b83232;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
         }
 
         /* Mobile Menu Toggle */
@@ -511,16 +411,17 @@
                 gap: 12px;
             }
 
-            .search-filter {
+            .container {
+                padding: 0 16px;
+            }
+
+            .card-footer {
                 flex-direction: column;
             }
 
-            .search-box {
-                min-width: 100%;
-            }
-
-            .action-buttons {
-                flex-direction: column;
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -548,7 +449,7 @@
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        <span>{{ now()->format('l, d F Y') }}</span>
+        <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
     </div>
 </div>
 
@@ -610,8 +511,8 @@
 <!-- HERO SECTION -->
 <section class="hero-section">
     <div class="hero-content">
-        <h1>Surat Masuk</h1>
-        <p>Kelola dan monitoring surat masuk dari instansi lain</p>
+        <h1>Tambah Surat Masuk</h1>
+        <p>Tambahkan surat masuk baru dari instansi lain</p>
     </div>
 </section>
 
@@ -619,111 +520,131 @@
 <div class="container">
     <div class="content-card">
         <div class="card-header">
-            <h2 class="card-title">Daftar Surat Masuk</h2>
-            <a href="{{ route('admin.surat-masuk.create') }}" class="btn btn-primary">
-                <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Tambah Surat Masuk
-            </a>
+            <h2 class="card-title">Form Tambah Surat Masuk</h2>
         </div>
 
-        <div class="card-body">
-            @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
-
-            <!-- Search & Filter -->
-            <form method="GET" action="{{ route('admin.surat-masuk.index') }}">
-                <div class="search-filter">
-                    <div class="search-box">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input type="text" name="search" placeholder="Cari nomor surat, pengirim, atau perihal..." value="{{ request('search') }}">
-                    </div>
-                    <select name="status" class="filter-select" onchange="this.form.submit()">
-                        <option value="">Semua Status</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Belum Diproses</option>
-                        <option value="processed" {{ request('status') == 'processed' ? 'selected' : '' }}>Sudah Diproses</option>
-                        <option value="archived" {{ request('status') == 'archived' ? 'selected' : '' }}>Diarsipkan</option>
-                    </select>
+        <form method="POST" action="{{ route('admin.surat-masuk.store') }}" enctype="multipart/form-data">
+            @csrf
+            
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label">
+                        Nomor Surat <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="nomor_surat" 
+                        class="form-control @error('nomor_surat') is-invalid @enderror" 
+                        value="{{ old('nomor_surat') }}"
+                        placeholder="Contoh: 001/SKP/I/2026"
+                        required>
+                    @error('nomor_surat')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
-            </form>
-
-            <!-- Table -->
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nomor Surat</th>
-                            <th>Tanggal Terima</th>
-                            <th>Pengirim</th>
-                            <th>Perihal</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($suratMasuk as $index => $surat)
-                        <tr>
-                            <td>{{ $suratMasuk->firstItem() + $index }}</td>
-                            <td>{{ $surat->nomor_surat }}</td>
-                            <td>{{ $surat->tanggal_terima->format('d/m/Y') }}</td>
-                            <td>{{ $surat->pengirim }}</td>
-                            <td>{{ Str::limit($surat->perihal, 50) }}</td>
-                            <td>
-                                <span class="badge {{ $surat->status_badge }}">
-                                    {{ $surat->status_text }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <a href="{{ route('admin.surat-masuk.show', $surat->id) }}" class="btn btn-sm btn-success">
-                                        <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
-                                        Detail
-                                    </a>
-                                    <a href="{{ route('admin.surat-masuk.edit', $surat->id) }}" class="btn btn-sm btn-warning">
-                                        <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                        </svg>
-                                        Edit
-                                    </a>
-                                    <form method="POST" action="{{ route('admin.surat-masuk.destroy', $surat->id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus surat ini?')" style="display: inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <svg style="width: 14px; height: 14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                            Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" style="text-align: center; padding: 40px;">
-                                Tidak ada data surat masuk.
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Tanggal Terima <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        name="tanggal_terima" 
+                        class="form-control @error('tanggal_terima') is-invalid @enderror"
+                        value="{{ old('tanggal_terima', date('Y-m-d')) }}"
+                        required>
+                    @error('tanggal_terima')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Pengirim <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="pengirim" 
+                        class="form-control @error('pengirim') is-invalid @enderror"
+                        value="{{ old('pengirim') }}"
+                        placeholder="Nama instansi/lembaga pengirim"
+                        required>
+                    @error('pengirim')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Perihal <span class="required">*</span>
+                    </label>
+                    <textarea 
+                        name="perihal" 
+                        class="form-control @error('perihal') is-invalid @enderror"
+                        placeholder="Perihal surat"
+                        required>{{ old('perihal') }}</textarea>
+                    @error('perihal')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Status <span class="required">*</span>
+                    </label>
+                    <select 
+                        name="status" 
+                        class="form-control @error('status') is-invalid @enderror"
+                        required>
+                        <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Belum Diproses</option>
+                        <option value="processed" {{ old('status') == 'processed' ? 'selected' : '' }}>Sudah Diproses</option>
+                        <option value="archived" {{ old('status') == 'archived' ? 'selected' : '' }}>Diarsipkan</option>
+                    </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Catatan</label>
+                    <textarea 
+                        name="catatan" 
+                        class="form-control @error('catatan') is-invalid @enderror"
+                        placeholder="Catatan tambahan (opsional)">{{ old('catatan') }}</textarea>
+                    @error('catatan')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Upload File Surat (PDF)</label>
+                    <input 
+                        type="file" 
+                        name="file" 
+                        class="form-control @error('file') is-invalid @enderror"
+                        accept=".pdf">
+                    <div class="form-help">Maksimal 2MB, format PDF</div>
+                    @error('file')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-            {{ $suratMasuk->links() }}
-        </div>
+            
+            <div class="card-footer">
+                <a href="{{ route('admin.surat-masuk.index') }}" class="btn btn-secondary">
+                    <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Batal
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    Simpan
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 

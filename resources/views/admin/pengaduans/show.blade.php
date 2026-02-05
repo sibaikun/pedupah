@@ -156,7 +156,7 @@
 <nav class="navbar" x-data="{ mobileMenuOpen: false }">
     <div class="navbar-left">
         <div class="logo-section">
-            <img src="{{ asset('build/logoicon.png') }}" alt="Logo" class="logo-icon">
+            <img src="{{ asset('build/images/logoicon.png') }}" alt="Logo" class="logo-icon">
             <span class="logo-text">PEDUPA<span class="admin-badge">ADMIN</span></span>
         </div>
         <div class="nav-menu">

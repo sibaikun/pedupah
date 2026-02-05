@@ -751,7 +751,7 @@
             <a href="{{ route('admin.surats.index') }}" class="nav-link">Surat Online</a>
             <a href="{{ route('admin.surat-masuk.index') }}" class="nav-link">Surat Masuk</a>
             <a href="{{ route('admin.surat-keluar.index') }}" class="nav-link">Surat Keluar</a>
-            <a href="{{ route('admin.pengaduans.index') }}" class="nav-link active">Aduan</a>
+            <a href="{{ route('admin.pengaduans.index') }}" class="nav-link active">Pengaduan</a>
         </div>
     </div>
 

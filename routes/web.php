@@ -99,28 +99,47 @@ Route::middleware(['auth', 'verified', 'isAdmin'])
         Route::prefix('surats')->name('surats.')->group(function () {
             Route::get('/', [SuratController::class, 'adminIndex'])->name('index');
             Route::get('/{id}', [SuratController::class, 'show'])->name('show');
+            Route::get('/{id}/print', [SuratController::class, 'print'])->name('print');
             Route::patch('/{id}/approve', [SuratController::class, 'approve'])->name('approve');
             Route::patch('/{id}/reject', [SuratController::class, 'reject'])->name('reject');
+            Route::post('/{id}/upload', [SuratController::class, 'uploadFile'])->name('upload');
         });
 
         // ===================================================================
-        // SURAT MASUK - Menggunakan Controller Terpisah
+        // SURAT MASUK - CRUD LENGKAP + PRINT
         // ===================================================================
         Route::prefix('surat-masuk')->name('surat-masuk.')->group(function () {
+            // Custom routes HARUS di atas route dengan parameter dinamis
+            Route::get('/create', [SuratMasukController::class, 'create'])->name('create');
+            
+            // List & Store
             Route::get('/', [SuratMasukController::class, 'index'])->name('index');
             Route::post('/', [SuratMasukController::class, 'store'])->name('store');
+            
+            // Show, Edit, Update, Delete, Print (dengan parameter ID)
             Route::get('/{id}', [SuratMasukController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('edit');
+            Route::get('/{id}/print', [SuratMasukController::class, 'print'])->name('print');
+            Route::put('/{id}', [SuratMasukController::class, 'update'])->name('update');
             Route::delete('/{id}', [SuratMasukController::class, 'destroy'])->name('destroy');
         });
 
         // ===================================================================
-        // SURAT KELUAR - Menggunakan Controller Terpisah
+        // SURAT KELUAR - CRUD LENGKAP + PRINT
         // ===================================================================
         Route::prefix('surat-keluar')->name('surat-keluar.')->group(function () {
+            // Custom routes HARUS di atas route dengan parameter dinamis
+            Route::get('/create', [SuratKeluarController::class, 'create'])->name('create');
+            
+            // List & Store
             Route::get('/', [SuratKeluarController::class, 'index'])->name('index');
             Route::post('/', [SuratKeluarController::class, 'store'])->name('store');
+            
+            // Show, Edit, Update, Delete, Print (dengan parameter ID)
             Route::get('/{id}', [SuratKeluarController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [SuratKeluarController::class, 'edit'])->name('edit');
             Route::get('/{id}/print', [SuratKeluarController::class, 'print'])->name('print');
+            Route::put('/{id}', [SuratKeluarController::class, 'update'])->name('update');
             Route::delete('/{id}', [SuratKeluarController::class, 'destroy'])->name('destroy');
         });
 
